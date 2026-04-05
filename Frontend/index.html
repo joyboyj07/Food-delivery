@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickBite — Food Delivery</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- AUTH PAGES -->
+<div id="auth-page">
+  <div class="auth-container">
+    <!-- Login -->
+    <div id="login-form" class="auth-card">
+      <div class="auth-brand">🍕 <span>QuickBite</span></div>
+      <h2>Welcome back!</h2>
+      <p class="auth-sub">Sign in to order delicious food</p>
+      <div id="login-error" class="alert-error" style="display:none"></div>
+      <div class="inp-group"><label>Email</label><input type="email" id="l-email" placeholder="you@email.com"></div>
+      <div class="inp-group"><label>Password</label><input type="password" id="l-password" placeholder="••••••••"></div>
+      <button class="btn-auth" onclick="login()">Sign In</button>
+      <p class="auth-switch">Don't have an account? <a onclick="switchAuth('register')">Sign Up</a></p>
+      <div class="auth-demo">
+        <p>Demo accounts:</p>
+        <button onclick="quickLogin('admin@quickbite.com','admin123')">👑 Admin Login</button>
+        <button onclick="quickLogin('john@email.com','admin123')">👤 Customer Login</button>
+      </div>
+    </div>
+    <!-- Register -->
+    <div id="register-form" class="auth-card" style="display:none">
+      <div class="auth-brand">🍕 <span>QuickBite</span></div>
+      <h2>Create Account</h2>
+      <p class="auth-sub">Join us for amazing food delivery</p>
+      <div id="register-error" class="alert-error" style="display:none"></div>
+      <div class="inp-group"><label>Full Name</label><input type="text" id="r-name" placeholder="John Doe"></div>
+      <div class="inp-group"><label>Email</label><input type="email" id="r-email" placeholder="you@email.com"></div>
+      <div class="inp-group"><label>Phone</label><input type="text" id="r-phone" placeholder="+91-9000000000"></div>
+      <div class="inp-group"><label>Password</label><input type="password" id="r-password" placeholder="Min 6 characters"></div>
+      <div class="inp-group"><label>Delivery Address</label><textarea id="r-address" placeholder="Your full address" rows="2"></textarea></div>
+      <button class="btn-auth" onclick="register()">Create Account</button>
+      <p class="auth-switch">Already have an account? <a onclick="switchAuth('login')">Sign In</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" style="display:none">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-brand" onclick="showSection('home')">🍕 <span>QuickBite</span></div>
+    <div class="nav-links" id="nav-links">
+      <a onclick="showSection('home')" data-page="home" class="active">Home</a>
+      <a onclick="showSection('restaurants')" data-page="restaurants">Restaurants</a>
+      <a onclick="showSection('orders')" data-page="orders">My Orders</a>
+    </div>
+    <div class="nav-right">
+      <div class="cart-btn" onclick="showSection('cart')">
+        🛒 <span class="cart-count" id="cart-count">0</span>
+      </div>
+      <div class="user-menu">
+        <div class="user-avatar" id="nav-avatar">U</div>
+        <div class="user-dropdown">
+          <div class="user-name" id="nav-user-name">User</div>
+          <a onclick="showSection('profile')">👤 Profile</a>
+          <a onclick="showSection('orders')">📦 Orders</a>
+          <a id="admin-link" onclick="showSection('admin')" style="display:none">⚙️ Admin Panel</a>
+          <a onclick="logout()" class="logout-link">⏻ Logout</a>
+        </div>
+      </div>
+    </div>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+  </nav>
+
+  <!-- HOME PAGE -->
+  <section id="section-home" class="section active">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-content">
+        <h1>Hungry? <span>We've got you!</span></h1>
+        <p>Order from the best restaurants near you. Fast delivery, hot food.</p>
+        <div class="hero-search">
+          <input type="text" id="hero-search" placeholder="Search for food or restaurants..." oninput="heroSearch()">
+          <button onclick="goToRestaurants()">🔍 Search</button>
+        </div>
+        <div class="hero-tags">
+          <span onclick="filterCuisine('Indian')">🍛 Indian</span>
+          <span onclick="filterCuisine('Pizza')">🍕 Pizza</span>
+          <span onclick="filterCuisine('Burger')">🍔 Burger</span>
+          <span onclick="filterCuisine('Biryani')">🍚 Biryani</span>
+          <span onclick="filterCuisine('Chinese')">🥡 Chinese</span>
+          <span onclick="filterCuisine('Japanese')">🍣 Sushi</span>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=500&fit=crop" alt="Food">
+        <div class="hero-badge top-left">⚡ 20-45 min delivery</div>
+        <div class="hero-badge bottom-right">🏆 1000+ restaurants</div>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="section-inner">
+      <h2 class="section-title">What are you craving?</h2>
+      <div class="categories-scroll">
+        <div class="cat-item" onclick="filterCuisine('Indian')"><div class="cat-img">🍛</div><span>Indian</span></div>
+        <div class="cat-item" onclick="filterCuisine('Italian')"><div class="cat-img">🍕</div><span>Pizza</span></div>
+        <div class="cat-item" onclick="filterCuisine('American')"><div class="cat-img">🍔</div><span>Burgers</span></div>
+        <div class="cat-item" onclick="filterCuisine('Biryani')"><div class="cat-img">🍚</div><span>Biryani</span></div>
+        <div class="cat-item" onclick="filterCuisine('Chinese')"><div class="cat-img">🥡</div><span>Chinese</span></div>
+        <div class="cat-item" onclick="filterCuisine('Japanese')"><div class="cat-img">🍱</div><span>Sushi</span></div>
+        <div class="cat-item" onclick="filterCuisine('Mexican')"><div class="cat-img">🌮</div><span>Mexican</span></div>
+        <div class="cat-item" onclick="filterCuisine('Healthy')"><div class="cat-img">🥗</div><span>Healthy</span></div>
+      </div>
+
+      <!-- Featured Restaurants -->
+      <div class="section-header">
+        <h2 class="section-title">🔥 Popular Restaurants</h2>
+        <a onclick="showSection('restaurants')" class="view-all">View all →</a>
+      </div>
+      <div class="restaurants-grid" id="home-restaurants"></div>
+
+      <!-- How it works -->
+      <div class="how-it-works">
+        <h2 class="section-title" style="text-align:center">How QuickBite Works</h2>
+        <div class="steps-grid">
+          <div class="step"><div class="step-icon">📍</div><h3>Choose Location</h3><p>Enter your delivery address to see nearby restaurants</p></div>
+          <div class="step"><div class="step-icon">🍽️</div><h3>Pick Your Food</h3><p>Browse menus and add your favorite items to cart</p></div>
+          <div class="step"><div class="step-icon">💳</div><h3>Place Order</h3><p>Checkout securely with multiple payment options</p></div>
+          <div class="step"><div class="step-icon">🛵</div><h3>Fast Delivery</h3><p>Track your rider in real-time as food heads your way</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESTAURANTS PAGE -->
+  <section id="section-restaurants" class="section">
+    <div class="section-inner">
+      <div class="page-header">
+        <div><h1>All Restaurants</h1><p id="restaurants-count">Loading...</p></div>
+        <div class="filters-bar">
+          <div class="search-box"><span>🔍</span><input type="text" id="rest-search" placeholder="Search..." oninput="searchRestaurants()"></div>
+          <select id="cuisine-filter" onchange="loadRestaurants()" class="filter-sel">
+            <option value="">All Cuisines</option>
+          </select>
+          <select id="sort-filter" onchange="loadRestaurants()" class="filter-sel">
+            <option value="rating">Top Rated</option>
+            <option value="delivery_time">Fastest</option>
+            <option value="price">Price</option>
+          </select>
+        </div>
+      </div>
+      <div class="restaurants-grid" id="all-restaurants"></div>
+      <div class="pagination" id="rest-pagination"></div>
+    </div>
+  </section>
+
+  <!-- RESTAURANT DETAIL -->
+  <section id="section-restaurant-detail" class="section">
+    <div id="restaurant-detail-content"></div>
+  </section>
+
+  <!-- CART PAGE -->
+  <section id="section-cart" class="section">
+    <div class="section-inner">
+      <h1 class="page-title">🛒 Your Cart</h1>
+      <div class="cart-layout" id="cart-content"></div>
+    </div>
+  </section>
+
+  <!-- CHECKOUT PAGE -->
+  <section id="section-checkout" class="section">
+    <div class="section-inner">
+      <h1 class="page-title">💳 Checkout</h1>
+      <div class="checkout-layout">
+        <div class="checkout-form-side">
+          <div class="checkout-card">
+            <h3>📍 Delivery Address</h3>
+            <div class="inp-group"><label>Full Address</label><textarea id="checkout-address" rows="3" placeholder="Enter your complete delivery address"></textarea></div>
+          </div>
+          <div class="checkout-card">
+            <h3>💰 Payment Method</h3>
+            <div class="payment-options">
+              <label class="payment-opt active"><input type="radio" name="payment" value="cod" checked> <span>💵 Cash on Delivery</span></label>
+              <label class="payment-opt"><input type="radio" name="payment" value="upi"> <span>📱 UPI</span></label>
+              <label class="payment-opt"><input type="radio" name="payment" value="card"> <span>💳 Card</span></label>
+            </div>
+          </div>
+          <div class="checkout-card">
+            <h3>📝 Special Instructions</h3>
+            <textarea id="checkout-notes" rows="2" placeholder="Any special requests for the restaurant..."></textarea>
+          </div>
+        </div>
+        <div class="checkout-summary-side">
+          <div class="checkout-card">
+            <h3>Order Summary</h3>
+            <div id="checkout-items"></div>
+            <div class="order-totals" id="checkout-totals"></div>
+            <button class="btn-place-order" onclick="placeOrder()">🚀 Place Order</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORDER SUCCESS -->
+  <section id="section-order-success" class="section">
+    <div class="success-page">
+      <div class="success-animation">✅</div>
+      <h1>Order Placed!</h1>
+      <p id="success-order-number"></p>
+      <p>Your food is being prepared. Track your order below.</p>
+      <div id="order-tracking-section"></div>
+      <button class="btn-primary" onclick="showSection('orders')" style="margin-top:24px">View All Orders</button>
+    </div>
+  </section>
+
+  <!-- ORDERS PAGE -->
+  <section id="section-orders" class="section">
+    <div class="section-inner">
+      <div class="page-header">
+        <h1>📦 My Orders</h1>
+        <select id="orders-filter" onchange="loadOrders()" class="filter-sel">
+          <option value="">All Orders</option>
+          <option value="pending">Pending</option>
+          <option value="preparing">Preparing</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div id="orders-list"></div>
+    </div>
+  </section>
+
+  <!-- ORDER DETAIL -->
+  <section id="section-order-detail" class="section">
+    <div class="section-inner">
+      <button class="btn-back" onclick="showSection('orders')">← Back to Orders</button>
+      <div id="order-detail-content"></div>
+    </div>
+  </section>
+
+  <!-- PROFILE PAGE -->
+  <section id="section-profile" class="section">
+    <div class="section-inner">
+      <h1 class="page-title">👤 My Profile</h1>
+      <div class="profile-layout">
+        <div class="profile-card">
+          <div class="profile-ava" id="profile-ava">U</div>
+          <h2 id="profile-name">-</h2>
+          <p id="profile-email-display">-</p>
+          <div class="profile-stats">
+            <div><span id="profile-orders-count">0</span><small>Orders</small></div>
+          </div>
+        </div>
+        <div class="profile-edit">
+          <h3>Edit Profile</h3>
+          <div class="inp-group"><label>Full Name</label><input type="text" id="edit-name"></div>
+          <div class="inp-group"><label>Phone</label><input type="text" id="edit-phone"></div>
+          <div class="inp-group"><label>Delivery Address</label><textarea id="edit-address" rows="3"></textarea></div>
+          <button class="btn-primary" onclick="updateProfile()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADMIN PANEL -->
+  <section id="section-admin" class="section">
+    <div class="section-inner">
+      <h1 class="page-title">⚙️ Admin Panel</h1>
+      <div class="admin-stats" id="admin-stats"></div>
+      <div class="admin-tabs">
+        <button class="tab-btn active" onclick="switchAdminTab('orders')">📦 Orders</button>
+        <button class="tab-btn" onclick="switchAdminTab('restaurants')">🏪 Restaurants</button>
+        <button class="tab-btn" onclick="switchAdminTab('menu')">🍽️ Menu Items</button>
+      </div>
+      <div id="admin-orders-tab" class="admin-tab-content active">
+        <div class="admin-filter-row">
+          <select id="admin-order-filter" onchange="loadAdminOrders()" class="filter-sel">
+            <option value="">All Orders</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="preparing">Preparing</option>
+            <option value="on_the_way">On The Way</option>
+            <option value="delivered">Delivered</option>
+          </select>
+        </div>
+        <div class="table-wrap"><table class="admin-table" id="admin-orders-table">
+          <thead><tr><th>Order #</th><th>Customer</th><th>Restaurant</th><th>Total</th><th>Status</th><th>Time</th><th>Actions</th></tr></thead>
+          <tbody id="admin-orders-body"></tbody>
+        </table></div>
+      </div>
+      <div id="admin-restaurants-tab" class="admin-tab-content">
+        <button class="btn-primary" onclick="openRestaurantModal()" style="margin-bottom:16px">+ Add Restaurant</button>
+        <div class="restaurants-grid" id="admin-restaurants-grid"></div>
+      </div>
+      <div id="admin-menu-tab" class="admin-tab-content">
+        <div class="admin-menu-controls">
+          <select id="admin-menu-restaurant" onchange="loadAdminMenu()" class="filter-sel"><option value="">Select Restaurant</option></select>
+          <button class="btn-primary" onclick="openMenuItemModal()">+ Add Menu Item</button>
+        </div>
+        <div class="restaurants-grid" id="admin-menu-grid"></div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end main-app -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+
+<!-- Restaurant Modal -->
+<div class="modal" id="restaurant-modal">
+  <div class="modal-hdr"><h3 id="rest-modal-title">Add Restaurant</h3><button onclick="closeModal()">✕</button></div>
+  <div class="modal-bdy">
+    <input type="hidden" id="rm-id">
+    <div class="inp-group"><label>Restaurant Name</label><input type="text" id="rm-name"></div>
+    <div class="inp-group"><label>Description</label><textarea id="rm-desc" rows="2"></textarea></div>
+    <div class="form-2col">
+      <div class="inp-group"><label>Cuisine</label><input type="text" id="rm-cuisine" placeholder="e.g. Indian, Italian"></div>
+      <div class="inp-group"><label>Phone</label><input type="text" id="rm-phone"></div>
+    </div>
+    <div class="inp-group"><label>Address</label><textarea id="rm-address" rows="2"></textarea></div>
+    <div class="inp-group"><label>Image URL</label><input type="text" id="rm-image" placeholder="https://..."></div>
+    <div class="form-2col">
+      <div class="inp-group"><label>Delivery Time (min)</label><input type="number" id="rm-dtime" value="30"></div>
+      <div class="inp-group"><label>Delivery Fee (₹)</label><input type="number" id="rm-dfee" value="30"></div>
+    </div>
+    <div class="inp-group"><label>Min Order (₹)</label><input type="number" id="rm-minorder" value="100"></div>
+  </div>
+  <div class="modal-ftr">
+    <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn-primary" onclick="saveRestaurant()">Save</button>
+  </div>
+</div>
+
+<!-- Menu Item Modal -->
+<div class="modal" id="menu-modal">
+  <div class="modal-hdr"><h3>Add Menu Item</h3><button onclick="closeModal()">✕</button></div>
+  <div class="modal-bdy">
+    <div class="inp-group"><label>Item Name</label><input type="text" id="mi-name"></div>
+    <div class="inp-group"><label>Description</label><textarea id="mi-desc" rows="2"></textarea></div>
+    <div class="form-2col">
+      <div class="inp-group"><label>Price (₹)</label><input type="number" id="mi-price"></div>
+      <div class="inp-group"><label>Category</label><select id="mi-category"></select></div>
+    </div>
+    <div class="inp-group"><label>Image URL</label><input type="text" id="mi-image"></div>
+    <div class="inp-group">
+      <label><input type="checkbox" id="mi-veg"> Vegetarian</label>
+    </div>
+  </div>
+  <div class="modal-ftr">
+    <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn-primary" onclick="saveMenuItem()">Save Item</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-wrap"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
